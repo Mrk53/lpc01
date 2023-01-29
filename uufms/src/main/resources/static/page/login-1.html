@@ -47,13 +47,13 @@
                     <label class="layui-icon layui-icon-password" for="password"></label>
                     <input type="password" name="password" lay-verify="required|password" placeholder="密码" autocomplete="off" class="layui-input" value="123456">
                 </div>
-                <div class="layui-form-item">
-                    <label class="layui-icon layui-icon-vercode" for="captcha"></label>
-                    <input type="text" name="captcha" lay-verify="required|captcha" placeholder="图形验证码" autocomplete="off" class="layui-input verification captcha" value="xszg">
-                    <div class="captcha-img">
-                        <img id="captchaPic" src="../images/captcha.jpg">
-                    </div>
-                </div>
+<!--                <div class="layui-form-item">-->
+<!--                    <label class="layui-icon layui-icon-vercode" for="captcha"></label>-->
+<!--                    <input type="text" name="captcha" lay-verify="required|captcha" placeholder="图形验证码" autocomplete="off" class="layui-input verification captcha" value="xszg">-->
+<!--                    <div class="captcha-img">-->
+<!--                        <img id="captchaPic" src="../images/captcha.jpg">-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="layui-form-item">
                     <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">
                 </div>
@@ -94,12 +94,29 @@
                 layer.msg('密码不能为空');
                 return false;
             }
-            if (data.captcha == '') {
-                layer.msg('验证码不能为空');
-                return false;
-            }
-            layer.msg('登录成功', function () {
-                window.location = '../index.html';
+            // if (data.captcha == '') {
+            //     layer.msg('验证码不能为空');
+            //     return false;
+            // }
+            $.ajax({
+                url:"/customer/login",
+                data:{
+                    customerName:data.username,
+                    customerPassword:data.password
+                },
+                type:"post",
+                async:false,
+                dataType:"text",
+                success:function(res){
+                    if (res.indexOf("true")>-1) {
+                        layer.msg('登录成功', function () {
+                            window.location = '../index.html';
+                        });
+                    }
+                    if (res.indexOf("false")>-1) {
+                        layer.msg('用户名或密码错误');
+                    }
+                }
             });
             return false;
         });

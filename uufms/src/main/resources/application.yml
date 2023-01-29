@@ -6,8 +6,29 @@ swagger:
   enable: true
 
 spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/uufms?serverTimezone=UTC
+    username: root
+    password: 123456
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-
+mybatis-plus:
+  #???????package?????????
+  typeAliasesPackage: com.example.mpdemo.domain
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    cache-enabled: true
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  global-config:
+    banner: true
+    # ??????
+    db-config:
+      # ???
+      logic-not-delete-value: 1
+      # ???
+      logic-delete-value: 0
