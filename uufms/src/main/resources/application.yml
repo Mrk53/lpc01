@@ -1,0 +1,13 @@
+server:
+  port: 8082
+
+
+swagger:
+  enable: true
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
