@@ -17,7 +17,7 @@ spring:
 
 mybatis-plus:
   #???????package?????????
-  typeAliasesPackage: com.example.mpdemo.domain
+  typeAliasesPackage: com.example.uufms.entity
   configuration:
     map-underscore-to-camel-case: true
     auto-mapping-behavior: full

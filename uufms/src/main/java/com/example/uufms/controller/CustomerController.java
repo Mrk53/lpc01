@@ -24,9 +24,10 @@ public class CustomerController {
     public String login(@RequestParam(name = "customerName") String customerName,
                         @RequestParam(name = "customerPassword") String customerPassword){
         QueryWrapper<Customer> customerQueryWrapper = new QueryWrapper<>();
-        customerQueryWrapper.eq("customerName",customerName).eq("customerPassword",customerPassword);
+        customerQueryWrapper.eq("customer_name",customerName).eq("customer_password",customerPassword);
         Customer one = iCustomerService.getOne(customerQueryWrapper);
         return null == one ? "false":"true";
     }
+
 
 }
