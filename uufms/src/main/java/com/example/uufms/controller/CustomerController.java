@@ -54,6 +54,7 @@ public class CustomerController {
                 String customerGender = hashMap.get("customerGender");
                 if (null!=customerName){
                     queryWrapper.like("customer_name",customerName);
+
                 }
                 if (null!=customerGender){
                     queryWrapper.like("customer_gender",customerGender);
