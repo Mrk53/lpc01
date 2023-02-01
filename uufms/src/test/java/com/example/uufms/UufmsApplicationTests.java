@@ -8,6 +8,12 @@ class UufmsApplicationTests {
 
     @Test
     void contextLoads() {
+        Integer o1 =1,o2 =2;
+        System.out.println(o1.compareTo(o2));
+    }
+    @Test
+    void test1(){
+        System.out.println("hello");
     }
 
 }

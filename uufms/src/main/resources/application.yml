@@ -16,7 +16,6 @@ spring:
       matching-strategy: ant_path_matcher
 
 mybatis-plus:
-  #???????package?????????
   typeAliasesPackage: com.example.uufms.entity
   configuration:
     map-underscore-to-camel-case: true
@@ -26,9 +25,6 @@ mybatis-plus:
   mapper-locations: classpath*:mapper/*Mapper.xml
   global-config:
     banner: true
-    # ??????
     db-config:
-      # ???
       logic-not-delete-value: 1
-      # ???
       logic-delete-value: 0

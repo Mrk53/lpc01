@@ -38,6 +38,18 @@
               "href": "page/welcome-3.html",
               "icon": "fa fa-tachometer",
               "target": "_self"
+            },
+            {
+              "title": "lpc主页",
+              "href": "uufms/uufms_Index.html",
+              "icon": "fa fa-tachometer",
+              "target": "_self"
+            },
+            {
+              "title": "lpc数据展示页面",
+              "href": "uufms/uufmsDataCustomer.html",
+              "icon": "fa fa-tachometer",
+              "target": "_self"
             }
           ]
         },
