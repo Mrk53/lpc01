@@ -50,6 +50,12 @@
               "href": "uufms/uufmsDataCustomer.html",
               "icon": "fa fa-tachometer",
               "target": "_self"
+            },
+            {
+              "title": "主题展示",
+              "href": "uufms/uufmsTopicShow.html",
+              "icon": "fa fa-reorder",
+              "target": "_self"
             }
           ]
         },
