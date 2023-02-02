@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +21,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@AllArgsConstructor
 public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,4 +52,24 @@ public class Customer implements Serializable {
     private String customerGender;
 
     private String customerMail;
+
+
+    public Customer(String customerName, String customerPassword, String customerGender, String customerMail) {
+        this.customerGender= customerGender;
+        this.customerPassword= customerPassword;
+        this.customerName= customerName;
+        this.customerMail= customerMail;
+    }
+
+    public Customer(Integer customerId, String customerName, String customerPassword, String customerGender, String customerMail) {
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.customerPassword = customerPassword;
+        this.customerGender = customerGender;
+        this.customerMail = customerMail;
+    }
+
+    public Customer(Integer customerId) {
+        this.customerId = customerId;
+    }
 }

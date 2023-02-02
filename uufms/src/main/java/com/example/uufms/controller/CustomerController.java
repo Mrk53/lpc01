@@ -1,21 +1,15 @@
 package com.example.uufms.controller;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.uufms.entity.Customer;
-import com.example.uufms.entity.LayuiTableResponse;
+import com.example.uufms.util.LayuiTableResponse;
 import com.example.uufms.service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * <p>
@@ -62,11 +56,46 @@ public class CustomerController {
             }
 
             Page<Customer> page1 = iCustomerService.page(customerPage, queryWrapper);
-             layuiTableResponse = new LayuiTableResponse(0, "success", (int) iCustomerService.count(queryWrapper), page1.getRecords());
+             layuiTableResponse = new LayuiTableResponse((int) iCustomerService.count(queryWrapper), page1.getRecords());
             return JSON.toJSONString(layuiTableResponse);
         } catch (Exception e) {
-            layuiTableResponse = new LayuiTableResponse(500, "获取数据失败->"+e.getMessage(), 0, new ArrayList<>() );
+            layuiTableResponse = new LayuiTableResponse(500);
             return JSON.toJSONString(layuiTableResponse);
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public String delete (@RequestParam(name = "customerId") Integer customerId){
+        try {
+            boolean b = iCustomerService.removeById(new Customer(customerId));
+            return b?"success":"false";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/insert")
+    public String insert (@RequestBody Map<String,String> map){
+        try {
+            String customerName = map.get("customerName");
+            String customerPassword = map.get("customerPassword");
+            String customerGender = map.get("customerGender");
+            String customerMail = map.get("customerMail");
+            Customer customer = new Customer(customerName, customerPassword, customerGender, customerMail);
+            boolean save = iCustomerService.save(customer);
+            return save?"success":"false";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PatchMapping("/update")
+    public String update(@RequestBody Customer customer){
+        try {
+            boolean update = iCustomerService.updateById(customer);
+            return update?"success":"false";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

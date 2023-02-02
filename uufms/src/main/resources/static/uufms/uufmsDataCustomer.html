@@ -125,13 +125,17 @@
             console.log(obj)
         });
 
+        /*
+
+         */
+
         table.on('tool(currentTableFilter)', function (obj) {
+            console.log(obj);
             var data = obj.data;
             if (obj.event === 'edit') {
-
                 var content = miniPage.getHrefContent('page/table/add.html');
-                var openWH = miniPage.getOpenWidthHeight();
 
+                var openWH = miniPage.getOpenWidthHeight();
                 var index = layer.open({
                     title: '编辑用户',
                     type: 1,
@@ -147,9 +151,23 @@
                 });
                 return false;
             } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
+                layer.confirm('真的删除'+data.customerName, function (index) {
                     layer.close(index);
+                    $.ajax({
+                        url: "/customer/delete",
+                        method:"delete",
+                        data:{
+                            customerId:data.customerId
+                        },
+                        dataType:"json",
+                        async:false,
+                        success:function (res) {
+                            if ("success" == res){
+                                obj.del();
+                            }
+                            layui.msg(res);
+                        }
+                    })
                 });
             }
         });
