@@ -26,6 +26,8 @@ public class Theme implements Serializable {
 
     private String themeTitle;
 
+    private String themeBody;
+
     private Integer themeIssuer;
 
     private LocalDateTime themeCreateTime;
