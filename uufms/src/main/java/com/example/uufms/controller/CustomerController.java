@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.uufms.entity.Customer;
 import com.example.uufms.util.LayuiTableResponse;
 import com.example.uufms.service.ICustomerService;
+import com.example.uufms.util.ResponseModel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/customer")
+@Slf4j
 public class CustomerController {
     @Autowired
     ICustomerService iCustomerService;
@@ -38,7 +41,7 @@ public class CustomerController {
     public String getAll(@RequestParam(name = "page") int page,
                          @RequestParam(name = "limit") int limit,
                          @RequestParam(name = "searchParams",required = false) String searchParams){
-        LayuiTableResponse layuiTableResponse =null;
+        LayuiTableResponse layuiTableResponse ;
         try {
             QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
             Page<Customer> customerPage = new Page<>(page, limit);
@@ -54,7 +57,6 @@ public class CustomerController {
                     queryWrapper.like("customer_gender",customerGender);
                 }
             }
-
             Page<Customer> page1 = iCustomerService.page(customerPage, queryWrapper);
              layuiTableResponse = new LayuiTableResponse((int) iCustomerService.count(queryWrapper), page1.getRecords());
             return JSON.toJSONString(layuiTableResponse);
@@ -65,17 +67,29 @@ public class CustomerController {
     }
 
     @DeleteMapping("/delete")
-    public String delete (@RequestParam(name = "customerId") Integer customerId){
+    public ResponseModel delete (@RequestParam(name = "customerId") Integer customerId){
         try {
             boolean b = iCustomerService.removeById(new Customer(customerId));
-            return b?"success":"false";
+            return b? ResponseModel.success() :ResponseModel.fail();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("/deleteList")
+    public ResponseModel deleteList (@RequestParam String list){
+        try {
+            List list1 = JSON.parseObject(list, List.class);
+            log.info("deleteList参数"+list1);
+            boolean b = iCustomerService.removeByIds(list1);
+            return b? ResponseModel.success() :ResponseModel.fail();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @PostMapping("/insert")
-    public String insert (@RequestBody Map<String,String> map){
+    public ResponseModel insert (@RequestParam Map<String,String> map){
         try {
             String customerName = map.get("customerName");
             String customerPassword = map.get("customerPassword");
@@ -83,17 +97,30 @@ public class CustomerController {
             String customerMail = map.get("customerMail");
             Customer customer = new Customer(customerName, customerPassword, customerGender, customerMail);
             boolean save = iCustomerService.save(customer);
-            return save?"success":"false";
+            return save?ResponseModel.success() :ResponseModel.fail();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @PatchMapping("/update")
-    public String update(@RequestBody Customer customer){
+    public ResponseModel update(@RequestParam Map<String,String> map){
         try {
-            boolean update = iCustomerService.updateById(customer);
-            return update?"success":"false";
+            System.out.println(map);
+//            String customerName = map.get("customerName");
+//            String customerPassword = map.get("customerPassword");
+//            String customerGender = map.get("customerGender");
+//            String customerMail = map.get("customerMail");
+//            String customerId = map.get("customerId");
+            String customerName = map.get("field[customerName]");
+            String customerPassword = map.get("field[customerPassword]");
+            String customerGender = map.get("field[customerGender]");
+            String customerMail = map.get("field[customerMail]");
+            String customerId = map.get("field[customerId]");
+            boolean update = iCustomerService.updateById(new Customer(Integer.parseInt(customerId),customerName,customerPassword,customerGender,customerMail));
+//                return ResponseModel.success(obj);
+//            boolean update = iCustomerService.updateById(customer);
+            return update?ResponseModel.success() :ResponseModel.fail();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

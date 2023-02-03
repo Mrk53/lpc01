@@ -29,7 +29,7 @@
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
                 <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="deleteList"> 删除 </button>
             </div>
         </script>
 
@@ -64,7 +64,7 @@
                 {field: 'customerId', width: 80, title: 'ID', sort: true},
                 {field: 'customerName', width: 80, title: '用户名'},
                 {field: 'customerGender', width: 80, title: '性别'},
-                {field: 'customerMail', width: 80, minWidth: 150, title: '邮箱'},
+                {field: 'customerMail', minWidth: 150, title: '邮箱'},
                 {field: 'createTime', title: '账号创建时间', minWidth: 150, sort: true},
                 {field: 'lastLoadTime', title: '最后登陆时间', minWidth: 150,sort:true},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
@@ -97,7 +97,7 @@
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {   // 监听添加操作
-                var content = miniPage.getHrefContent('page/table/add.html');
+                var content = miniPage.getHrefContent('page/table/customerAdd.html');
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
@@ -113,10 +113,27 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'delete') {  // 监听删除操作
+            } else if (obj.event === 'deleteList') {  // 监听删除操作
                 var checkStatus = table.checkStatus('currentTableId')
                     , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                layer.confirm('真的删除'+JSON.stringify(data), function (index) {
+                    layer.close(index);
+                    $.ajax({
+                        url: "/customer/deleteList",
+                        method:"delete",
+                        data:{
+                            list:JSON.stringify(data)
+                        },
+                        dataType:"json",
+                        async:false,
+                        success:function (res) {
+                            if (200 === res.code){
+                                obj.del();
+                            }
+                            layer.msg("删除成功");
+                        }
+                    })
+                });
             }
         });
 
@@ -133,8 +150,7 @@
             console.log(obj);
             var data = obj.data;
             if (obj.event === 'edit') {
-                var content = miniPage.getHrefContent('page/table/add.html');
-
+                var content = miniPage.getHrefContent('page/table/customerEdit.html');
                 var openWH = miniPage.getOpenWidthHeight();
                 var index = layer.open({
                     title: '编辑用户',
@@ -145,6 +161,16 @@
                     area: [openWH[0] + 'px', openWH[1] + 'px'],
                     offset: [openWH[2] + 'px', openWH[3] + 'px'],
                     content: content,
+                    // 弹出成功回调
+                    success:function () {
+                        $("[name='customerId'][event='edit']").val(data.customerId);
+                        $("[name='customerName'][event='edit']").val(data.customerName);
+                        $("[name='customerPassword'][event='edit']").val(data.customerPassword);
+                        $("[name='customerMail'][event='edit']").val(data.customerMail);
+                        $("[name='customerGender'][event='edit'][value='男']").attr("checked",data.customerGender === "男");
+                        $("[name='customerGender'][event='edit'][value='女']").attr("checked",data.customerGender === "女");
+                        form.render(); //更新全部
+                    }
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -162,10 +188,10 @@
                         dataType:"json",
                         async:false,
                         success:function (res) {
-                            if ("success" == res){
+                            if (200 === res.code){
                                 obj.del();
                             }
-                            layui.msg(res);
+                            layer.msg("删除成功");
                         }
                     })
                 });

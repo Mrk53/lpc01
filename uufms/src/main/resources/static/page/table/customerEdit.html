@@ -1,0 +1,94 @@
+<div class="layuimini-main">
+
+    <form class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required" >id</label>
+            <div class="layui-input-block">
+                <input type="text" name="customerId" lay-verify="required" lay-reqtext="用户id不能为空"
+                       placeholder="请输入用户id" value="" class="layui-input" disabled event="edit">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="customerName" lay-verify="required" lay-reqtext="用户名不能为空"
+                       placeholder="请输入用户名" value="" class="layui-input" event="edit">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="customerGender" value="男" title="男" event="edit">
+                <input type="radio" name="customerGender" value="女" title="女" event="edit">
+            </div>
+        </div>
+        <!--    <div class="layui-form-item">-->
+        <!--      <label class="layui-form-label required">手机</label>-->
+        <!--      <div class="layui-input-block">-->
+        <!--        <input type="number" name="phone" lay-verify="required" lay-reqtext="手机不能为空" placeholder="请输入手机" value="" class="layui-input">-->
+        <!--      </div>-->
+        <!--    </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="email" name="customerMail" placeholder="请输入邮箱" value="" class="layui-input" lay-verify="email|required" event="edit">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="customerPassword" placeholder="请输入密码" value="" class="layui-input" event="edit">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form', 'table'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$;
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var index = layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            }, function () {
+                let field = data.field;
+                $.ajax({
+                    url:"/customer/update",
+                    async:false,
+                    dataType:"json",
+                    method:"patch",
+                    data:{
+                        field,
+                    },
+                    success: function (res) {
+                        if (res.code === 200) {
+                            // 关闭弹出层
+                            layer.close(index);
+                            layer.close(parentIndex);
+                        }
+                        layer.msg(res.msg);
+                    }
+                })
+            });
+            return false;
+        });
+
+    });
+</script>
