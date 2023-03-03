@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 7979
 
 
 swagger:
@@ -14,6 +14,9 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  redis:
+    host: 122.51.174.189
+    password: 123456
 
 mybatis-plus:
   typeAliasesPackage: com.example.uufms.entity
@@ -28,3 +31,7 @@ mybatis-plus:
     db-config:
       logic-not-delete-value: 1
       logic-delete-value: 0
+
+#logging:
+#  file:
+#    path:

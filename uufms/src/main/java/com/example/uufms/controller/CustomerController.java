@@ -42,6 +42,9 @@ public class CustomerController {
                          @RequestParam(name = "limit") int limit,
                          @RequestParam(name = "searchParams",required = false) String searchParams){
         LayuiTableResponse layuiTableResponse ;
+        log.info("page-->"+page);
+        log.info("limit-->"+limit);
+        log.info("searchParams-->"+searchParams);
         try {
             QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
             Page<Customer> customerPage = new Page<>(page, limit);
