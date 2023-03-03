@@ -7,15 +7,15 @@
         <form class="layui-form layui-form-pane" action="">
           <div class="layui-form-item">
             <div class="layui-inline">
-              <label class="layui-form-label">主题名</label>
+              <label class="layui-form-label">主题标题</label>
               <div class="layui-input-inline">
-                <input type="text" name="username" autocomplete="off" class="layui-input">
+                <input type="text" name="themeTitle" autocomplete="off" class="layui-input">
               </div>
             </div>
             <div class="layui-inline">
               <label class="layui-form-label">主题关键字</label>
               <div class="layui-input-inline">
-                <input type="text" name="sex" autocomplete="off" class="layui-input">
+                <input type="text" name="themeBody" autocomplete="off" class="layui-input">
               </div>
             </div>
             <div class="layui-inline">
@@ -63,7 +63,7 @@
         {type: "checkbox", width: 50},
         {field: 'themeId', width: 80, title: 'ID', sort: true},
         {field: 'themeTitle', width: 80, title: '主题标题'},
-        {field: 'themeIssuer', width: 80, title: '主题创建人'},
+        {field: 'themeBody', width: 80, title: '主题详细信息'},
         {field: 'themeCreateTime', title: '主题创建时间', minWidth: 150, sort: true},
         {field: 'themeUpdateTime', title: '主题最后修改时间', minWidth: 150,sort:true},
         {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
@@ -80,7 +80,6 @@
       layer.alert(result, {
         title: '最终的搜索信息'
       });
-
       //执行搜索重载
       table.reload('currentTableId', {
         page: {
@@ -99,7 +98,7 @@
      */
     table.on('toolbar(currentTableFilter)', function (obj) {
       if (obj.event === 'add') {   // 监听添加操作
-        var content = miniPage.getHrefContent('page/table/add.html');
+        var content = miniPage.getHrefContent('page/table/addTheme.html');
         var openWH = miniPage.getOpenWidthHeight();
 
         var index = layer.open({
@@ -131,7 +130,7 @@
       var data = obj.data;
       if (obj.event === 'edit') {
 
-        var content = miniPage.getHrefContent('page/table/add.html');
+        var content = miniPage.getHrefContent('page/table/editTheme.html');
         var openWH = miniPage.getOpenWidthHeight();
 
         var index = layer.open({
@@ -150,6 +149,18 @@
         return false;
       } else if (obj.event === 'delete') {
         layer.confirm('真的删除行么', function (index) {
+          console.log(index);
+          $.ajax({
+            url:"theme/delTheme",
+            data:{themeId:index},
+            success:function (res) {
+              if (res.code == 200){
+                console.log(res.data);
+              }else {
+                console.log(res);
+              }
+            }
+          })
           obj.del();
           layer.close(index);
         });
